@@ -3,15 +3,17 @@ package com.example.repositories;
 import com.example.entities.Phone;
 import com.example.interfaces.PhoneRepository;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryRepository implements PhoneRepository {
     List<Phone> phonesList = new ArrayList<>();
 
+    private static int lastId = 1;
+
     @Override
     public void add(Phone p){
+        p.setId(lastId++);
         phonesList.add(p);
     }
 
@@ -21,7 +23,7 @@ public class InMemoryRepository implements PhoneRepository {
     }
 
     @Override
-    public Phone findById(int id) throws SQLException {
+    public Phone findById(int id) {
         for(Phone p : phonesList){
             if(p.getId() == id){
                 return p;

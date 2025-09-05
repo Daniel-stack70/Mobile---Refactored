@@ -20,7 +20,7 @@ public class SqlPhoneRepository implements PhoneRepository {
     }
 
     @Override
-    public void add(Phone p) throws SQLException {
+    public void add(Phone p) {
         if (!validator.allIsValid(p)) return;
         try (PreparedStatement stmt = connection.prepareStatement(
                 "INSERT INTO phones (brand, model, batteryLife, storage, ram, cameraQuality, screenSize, has5G, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
@@ -40,21 +40,25 @@ public class SqlPhoneRepository implements PhoneRepository {
                     p.setId(keys.getInt(1));
                 }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
     }
 
     @Override
-    public void remove(Phone p) throws SQLException {
+    public void remove(Phone p){
         try (PreparedStatement stmt = connection.prepareStatement(
                 "DELETE FROM phones WHERE id = ?")) {
             stmt.setInt(1, p.getId());
             stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public Phone findById(int id) throws SQLException {
+    public Phone findById(int id) {
         String sql = "SELECT id, brand, model, batteryLife, storage, ram, " +
                 "cameraQuality, screenSize, has5G, price FROM phones " +
                 "WHERE id = ?";
@@ -78,12 +82,14 @@ public class SqlPhoneRepository implements PhoneRepository {
                     return p;
                 }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return null;
     }
 
     @Override
-    public List<Phone> getAll() throws SQLException {
+    public List<Phone> getAll(){
         List<Phone> phones = new ArrayList<>();
         String sql = "SELECT id, brand, model, batteryLife, storage, ram, " +
                 "cameraQuality, screenSize, has5G, price FROM phones";
@@ -106,6 +112,8 @@ public class SqlPhoneRepository implements PhoneRepository {
                 p.setId(rs.getInt("id"));
                 phones.add(p);
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
         return phones;

@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface PhoneRepository {
 
-    void add(Phone phone) throws SQLException;
-    void remove(Phone phone) throws SQLException;
-    Phone findById(int id) throws SQLException;
-    List<Phone> getAll() throws SQLException;
+    void add(Phone phone);
+    void remove(Phone phone);
+    Phone findById(int id);
+    List<Phone> getAll();
 
 }
