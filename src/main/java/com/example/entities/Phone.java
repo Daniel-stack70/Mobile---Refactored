@@ -1,9 +1,13 @@
 package com.example.entities;
 
+import com.example.interfaces.RankCalculator;
+import com.example.utilities.PhoneComparator;
+import com.example.utilities.PhoneRanker;
 
-import static com.example.entities.Coefficients.*;
+import java.util.Comparator;
 
 public class Phone {
+    int id;
     String brand;
     String model;
     int batteryLife;       // hours
@@ -14,7 +18,16 @@ public class Phone {
     boolean has5G;
     int price;
 
-    public Phone(String brand, String model, int batteryLife, int storage, int ram, double cameraQuality, double screenSize, boolean is5G, int price) {
+    public Phone(String brand,
+                 String model,
+                 int batteryLife,
+                 int storage,
+                 int ram,
+                 double cameraQuality,
+                 double screenSize,
+                 boolean is5G,
+                 int price
+    ) {
         this.brand = brand;
         this.model = model;
         this.batteryLife = batteryLife;
@@ -26,29 +39,16 @@ public class Phone {
         this.price = price;
     }
 
-    public double getPhoneRating() {
-        double baseScore = (batteryLife * COEFF_BATTERY)
-                + (storage * COEFF_STORAGE)
-                + (ram * COEFF_RAM)
-                + (cameraQuality * COEFF_CAMERA)
-                + (screenSize * COEFF_SCREEN)
-                + (has5G ? COEFF_5G : 0)
-                + (price * COEFF_PRICE);
-
-        return baseScore + (isCombo() ? COEFF_HAS_ALL : 0);
-    }
-
-    public int compareTo(Phone other) {
-        return Double.compare(this.getPhoneRating(), other.getPhoneRating());
-    }
-
-    public double getValueForMoney() {
-        if (price <= 0) return getPhoneRating();
-        return getPhoneRating() / price;
-    }
-
-    private boolean isCombo() {
+    public boolean isCombo() {
         return has5G && storage >= 128 && ram >= 8;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getBrand() {
@@ -89,7 +89,15 @@ public class Phone {
 
     @Override
     public String toString() {
-        return brand + " " + model + " -> Rating: " + getPhoneRating()
-                + ", Value for Money: " + getValueForMoney();
+        return  "id=" + id +
+                ", brand='" + brand + '\'' +
+                ", model='" + model + '\'' +
+                ", batteryLife=" + batteryLife +
+                ", storage=" + storage +
+                ", ram=" + ram +
+                ", cameraQuality=" + cameraQuality +
+                ", screenSize=" + screenSize +
+                ", has5G=" + has5G +
+                ", price=" + price;
     }
 }

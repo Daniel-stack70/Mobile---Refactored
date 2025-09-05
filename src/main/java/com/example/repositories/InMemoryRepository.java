@@ -1,21 +1,37 @@
 package com.example.repositories;
 
 import com.example.entities.Phone;
+import com.example.interfaces.PhoneRepository;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PhoneRepository {
+public class InMemoryRepository implements PhoneRepository {
     List<Phone> phonesList = new ArrayList<>();
 
-    public void addPhone(Phone p){
+    @Override
+    public void add(Phone p){
         phonesList.add(p);
     }
 
-    public void removePhone(Phone p){
+    @Override
+    public void remove(Phone p){
         phonesList.remove(p);
     }
 
-    public List<Phone> getPhones() {
+    @Override
+    public Phone findById(int id) throws SQLException {
+        for(Phone p : phonesList){
+            if(p.getId() == id){
+                return p;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<Phone> getAll() {
         return phonesList;
     }
 
@@ -24,6 +40,7 @@ public class PhoneRepository {
             if(brand.equals(p.getBrand()) && model.equals(p.getModel()))
                 return p;
         }
+
         return null;
     }
 }

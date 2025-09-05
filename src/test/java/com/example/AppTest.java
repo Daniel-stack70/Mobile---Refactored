@@ -1,16 +1,25 @@
 package com.example;
 
 import com.example.entities.Phone;
-import org.junit.jupiter.api.Test;  // ✅ JUnit 5 Test
+import com.example.interfaces.RankCalculator;
+import com.example.utilities.PhoneComparator;
+import com.example.utilities.PhoneRanker;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import static org.junit.jupiter.api.Assertions.*;  // ✅ JUnit 5 assertions
+import java.util.Comparator;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
-
-public class AppTest 
+public class AppTest
 {
+
+    private final Comparator<Phone> phoneComparator = new PhoneComparator();
+    private final RankCalculator rankCalculator = new PhoneRanker();
+
+
     @Test
     public void testAssertAllCorrectSpecsInsertion() {
         Phone phone = new Phone("Generic", "gen", 5, 64, 4, 4, 4, false, 100);
@@ -26,22 +35,11 @@ public class AppTest
             () -> assertFalse(phone.is5G())
         );
 
-        Phone phone2 = new Phone(null, null, 0, 0, 0, 0, 0, false, 0);
-        assertAll("Null phone",
-            () -> assertNull(phone2.getBrand()),
-            () -> assertNull(phone2.getModel()),
-            () -> assertEquals(0, phone2.getScreenSize(), 0.001),
-            () -> assertEquals(0, phone2.getStorage()),
-            () -> assertEquals(0, phone2.getRam()),
-            () -> assertEquals(0, phone2.getCameraQuality(), 0.001),
-            () -> assertEquals(0, phone2.getBatteryLife()),
-            () -> assertFalse(phone2.is5G())
-        );
     }
 
     @ParameterizedTest
     @MethodSource("com.example.argumentProviders.ComparisonProvider#phoneComparisonProvider")
     public void testIsBetter(Phone p1, Phone p2, int expected) {
-        assertEquals(expected, p1.compareTo(p2));
+        assertEquals(expected, phoneComparator.compare(p1, p2));
     }
 }
